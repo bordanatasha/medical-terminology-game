@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Human Body in Health and Disease</title>
+    <style>
+        /* General styling for the entire page */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #60A5FA 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Medical-themed background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Medical-themed floating elements */
+        body::after {
+            content: '⚕️';
+            position: fixed;
+            top: 10%;
+            right: 5%;
+            font-size: 3em;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Enhanced menu section titles */
+        .menu-section-title {
+            color: #1E3A8A;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .menu-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #3B82F6, #1E3A8A);
+            border-radius: 2px;
+        }
+
+        /* Main container for the game - now transparent */
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced menu card animations */
+        .menu-card {
+            animation: slideInFromLeft 0.6s ease forwards;
+        }
+
+        .menu-card:nth-child(even) {
+            animation: slideInFromRight 0.6s ease forwards;
+        }
+
+        /* All menu cards load simultaneously - no staggered delays */
+        
+        /* Pause Overlay */
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .pause-overlay h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        /* Header section with title and subtitle */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1em;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            font-weight: 300;
+        }
+
+        /* Bar displaying game statistics */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #CC0033;
+        }
+
+        /* Progress bar styles */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6, #1E3A8A);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Screen visibility handling */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Menu structure */
+        .menu-section {
+            margin-bottom: 30px;
+        }
+        
+        .menu-section-title {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+        }
+
+        /* Main menu grid and card styles */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .menu-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .menu-card p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .difficulty-level {
+            display: inline-block;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+            color: white;
+            border-radius: 25px;
+            margin-top: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(30, 58, 138, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Gameplay area styles */
+        .game-area {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 35px;
+            border-radius: 20px;
+            min-height: 350px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-size: 1.3em;
+            color: #ffffff;
+            line-height: 1.5;
+            flex-grow: 1;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Multiple choice options */
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+        }
+
+        .option:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+            color: white;
+            border-color: #3B82F6;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+            animation: pulse 0.5s ease;
+        }
+
+        .option.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Drag and drop matching game styles */
+        .drag-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .drag-column {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .drag-column h4 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .draggable {
+            background: linear-gradient(135deg, #3B82F6 0%, #1E3A8A 100%);
+            color: white;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: move;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        }
+        
+        .draggable:hover {
+            transform: scale(1.05);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            min-height: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drop-zone.drag-over {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .drop-zone.filled .draggable {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .drop-zone.filled .draggable::after {
+            content: '↺';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #3B82F6;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .drop-zone.filled .draggable:hover::after {
+            background: #1E3A8A;
+            transform: scale(1.1);
+        }
+
+        /* General controls and buttons */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .btn-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #333;
+            transition: stroke 0.3s;
+        }
+        .btn-icon:hover svg {
+            stroke: #3B82F6;
+        }
+
+        .btn-icon-small {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 0 0 10px;
+        }
+        .btn-icon-small svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            transition: transform 0.3s;
+        }
+        .btn-icon-small:hover svg {
+            transform: scale(1.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3B82F6 0%, #1E3A8A 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+        
+        .btn-danger {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #5a6268;
+        }
+        
+        .btn-hint {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-hint:hover {
+            background: #e0a800;
+        }
+        
+        /* Hint and feedback boxes */
+        .hint-box {
+            background: rgba(255, 193, 7, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            animation: slideDown 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .hint-box.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.success {
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #ffffff;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .feedback.error {
+            background: rgba(239, 68, 68, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #ffffff;
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .feedback.warning {
+            background: rgba(245, 158, 11, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #ffffff;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Improved feedback for matching games */
+        .feedback-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .feedback-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .feedback-item:last-child {
+            border-bottom: none;
+        }
+
+        .feedback-item.correct-match::before {
+            content: '✔ ';
+            color: #155724;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .feedback-item.incorrect-match::before {
+            content: '✖ ';
+            color: #721c24;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+
+        /* Results screen styles */
+        .results-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 3px solid rgba(30, 58, 138, 0.4);
+            color: #1E3A8A;
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .results-header {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .score-display {
+            font-size: 3.5em;
+            color: #1E3A8A;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
+            background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .score-display-label {
+            font-size: 1em;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+            color: #6B7280;
+        }
+
+        .performance-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .performance-card {
+            background: rgba(59, 130, 246, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            width: 160px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .performance-card svg {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 10px;
+            stroke: #fff;
+        }
+
+        .performance-card h4 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .performance-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .review-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .review-section h3 {
+            margin-bottom: 15px;
+            text-align: center;
+            color: #1E3A8A;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .review-list {
+            list-style: none;
+            padding: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .review-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            border-radius: 8px;
+            color: #1E3A8A;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Results Feedback Chip Styles */
+        .results-feedback {
+            margin: 25px auto;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: 600;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chip-excellent {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: 2px solid #10B981;
+        }
+        
+        .chip-good {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+            border: 2px solid #3B82F6;
+        }
+        
+        .chip-practice {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            border: 2px solid #F59E0B;
+        }
+        
+        .chip-neutral {
+            background: linear-gradient(135deg, #6B7280, #4B5563);
+            color: white;
+            border: 2px solid #6B7280;
+        }
+        .review-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .review-item span {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        
+
+
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .drag-container { grid-template-columns: 1fr; }
+            .performance-grid { flex-direction: column; align-items: center; }
+            .performance-card { width: 80%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="pauseOverlay" class="pause-overlay">
+            <h2>Paused</h2>
+            <button class="btn btn-primary" onclick="resumeGame()">Resume</button>
+        </div>
+        <!-- Main Menu Screen -->
+        <div id="menuScreen" class="screen active">
+            <div class="header">
+                <h1>The Human Body in Health and Disease</h1>
+                <p class="subtitle">Chapter 2: Medical Terminology & Anatomy</p>
+            </div>
+            
+            <div class="menu-section">
+                <h2 class="menu-section-title" id="beginner-title">Beginner</h2>
+                <div class="menu-grid">
+                    <div class="menu-card" onclick="startGame('beginner', 'word-breakdown')">
+                        <h3>Word Breakdown</h3>
+                        <p>Break down medical terms into prefixes, suffixes, and roots</p>
+                        <span class="difficulty-level">Analysis</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('beginner', 'basic-anatomy')">
+                        <h3>Basic Anatomy</h3>
+                        <p>Learn fundamental anatomical concepts and positions</p>
+                        <span class="difficulty-level">Multiple Choice</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('beginner', 'body-organization')">
+                        <h3>Body Organization</h3>
+                        <p>Understand the hierarchy from cells to systems</p>
+                        <span class="difficulty-level">Multiple Choice</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('beginner', 'body-regions')">
+                        <h3>Body Regions</h3>
+                        <p>Learn anatomical regions and body cavities</p>
+                        <span class="difficulty-level">Matching</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h2 class="menu-section-title" id="intermediate-title">Intermediate</h2>
+                <div class="menu-grid">
+                    <div class="menu-card" onclick="startGame('intermediate', 'tissue-systems')">
+                        <h3>Tissue & Systems</h3>
+                        <p>Explore tissue types and their roles in body systems</p>
+                        <span class="difficulty-level">Mix & Match</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('intermediate', 'disease-transmission')">
+                        <h3>Disease Transmission</h3>
+                        <p>Understand how diseases spread and transmission methods</p>
+                        <span class="difficulty-level">Multiple Choice</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('intermediate', 'healthcare-professionals')">
+                        <h3>Healthcare Professionals</h3>
+                        <p>Learn about different medical careers and roles</p>
+                        <span class="difficulty-level">Matching</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('intermediate', 'terminology-building')">
+                        <h3>Terminology Building</h3>
+                        <p>Construct medical terms from word parts</p>
+                        <span class="difficulty-level">Construction</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h2 class="menu-section-title" id="advanced-title">Advanced</h2>
+                <div class="menu-grid">
+                    <div class="menu-card" onclick="startGame('advanced', 'clinical-cases')">
+                        <h3>Clinical Cases</h3>
+                        <p>Apply knowledge to real patient scenarios</p>
+                        <span class="difficulty-level">Case Analysis</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('advanced', 'genetics-disorders')">
+                        <h3>Genetics Disorders</h3>
+                        <p>Solve complex genetic inheritance problems</p>
+                        <span class="difficulty-level">Problem Solving</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('advanced', 'pathology-analysis')">
+                        <h3>Pathology Analysis</h3>
+                        <p>Diagnose conditions using anatomical knowledge</p>
+                        <span class="difficulty-level">Diagnostic</span>
+                    </div>
+                    <div class="menu-card" onclick="startGame('advanced', 'medical-research')">
+                        <h3>Medical Research</h3>
+                        <p>Analyze research studies and clinical trials</p>
+                        <span class="difficulty-level">Research Analysis</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="stats-bar">
+                <div class="stat">
+                    Time: <span class="stat-value" id="timer">00:00</span>
+                </div>
+                <div class="stat">
+                    Score: <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat">
+                    Streak: <span class="stat-value" id="streak">0</span>
+                </div>
+                <div class="stat">
+                    Level: <span class="stat-value" id="level">Beginner</span>
+                </div>
+            </div>
+    
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Progress</span>
+                    <span id="progressText">0/10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="game-area" id="gameArea">
+                <!-- Dynamic game content loads here -->
+            </div>
+            <div class="hint-box" id="hintBox"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+                <div>
+                    <button class="btn btn-secondary" onclick="showMenu()">Menu</button>
+                    <button class="btn btn-danger" onclick="endGame(true)">End Game</button>
+                </div>
+                <div>
+                    <button class="btn btn-icon" onclick="pauseGame()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-6-13.5v13.5" />
+                        </svg>
+                    </button>
+                    <button class="btn btn-hint" id="hintBtn" onclick="showHint()">Hint</button>
+                    <button class="btn btn-primary" id="submitBtn" onclick="checkAnswer()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="results-container">
+                <h2 class="results-header">Activity Summary</h2>
+                <div class="score-display">
+                    <span class="score-display-label">Final Score</span>
+                    <span id="finalScore">0</span>
+                </div>
+                <div class="performance-grid">
+                    <div class="performance-card">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <h4>Time Spent</h4>
+                        <div class="value" id="totalTime">00:00</div>
+                    </div>
+                    <div class="performance-card">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                        <h4>Questions Answered</h4>
+                        <div class="value" id="totalAnswered">0</div>
+                    </div>
+                    <div class="performance-card">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+                        <h4>Accuracy</h4>
+                        <div class="value" id="accuracy">0%</div>
+                    </div>
+                    <div class="performance-card">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.25 8.25c0-2.485-2.099-4.5-4.688-4.5s-4.688 2.015-4.688 4.5 2.099 4.5 4.688 4.5 4.688-2.015 4.688-4.5z" />
+                          </svg>
+                        <h4>Best Streak</h4>
+                        <div class="value" id="bestStreak">0</div>
+                    </div>
+                </div>
+                
+                <!-- Performance Feedback Chip -->
+                <div id="resultsFeedback" class="results-feedback" style="display: none; margin: 25px auto; padding: 15px 30px; border-radius: 25px; font-size: 1.2em; font-weight: 600; max-width: 400px;">
+                    Performance feedback will appear here
+                </div>
+                
+                <div id="reviewSection" class="review-section">
+                    <h3>Areas for Review</h3>
+                    <ul id="reviewList" class="review-list">
+                        <!-- Incorrect answers will be populated here -->
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showMenu()">Return to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                 // Game state object to hold all dynamic data
+         let gameState = {
+             currentLevel: 'beginner',
+             currentMode: 'word-parts',
+             score: 0,
+             streak: 0,
+             bestStreak: 0,
+             questionsAnswered: 0,
+             totalQuestions: 10,
+             totalItemsForAccuracy: 0,
+             currentQuestion: null,
+             currentQuestionIndex: 0,
+             elapsedTime: 0,
+             timerInterval: null,
+             correctAnswers: 0,
+             isAnswered: false,
+             incorrectlyAnswered: [],
+             shuffledMatchingItems: [], 
+         };
+
+        // Comprehensive medical data for the game
+        const medicalData = {
+            beginner: {
+                'word-breakdown': [
+                    { term: 'physiology', meaning: 'study of functions of structures of the body' },
+                    { term: 'cytology', meaning: 'study of cells' },
+                    { term: 'cytologist', meaning: 'specialist in study and analysis of cells' },
+                    { term: 'epidemiology', meaning: 'study of outbreaks of disease within a population group' },
+                    { term: 'histology', meaning: 'microscopic study of tissues' },
+                    { term: 'histologist', meaning: 'specialist in study of microscopic structure of tissues' },
+                    { term: 'genetics', meaning: 'study of transfer of genes from parent to child' },
+                    { term: 'pandemic', meaning: 'outbreak of disease over a large geographic area' },
+                    { term: 'endemic', meaning: 'ongoing presence of disease within a population group' },
+                    { term: 'idiopathic', meaning: 'illness without known cause' },
+                    { term: 'homeostasis', meaning: 'body sustaining stable internal environment' },
+                    { term: 'adipose', meaning: 'provides padding, insulation, and support' },
+                    { term: 'chondri', meaning: 'cartilage' },
+                    { term: 'hypochondriac', meaning: 'covered by lower ribs' },
+                    { term: 'epigastric', meaning: 'located above the stomach' },
+                    { term: 'hypogastric', meaning: 'located below the stomach' },
+                    { term: 'iliac', meaning: 'located over the hip bones' },
+                    { term: 'lumbar', meaning: 'located near inward curve of the spine' },
+                    { term: 'ventral', meaning: 'refers to the front of the organ/body' },
+                    { term: 'dorsal', meaning: 'refers to the back of the organ/body' }
+                ],
+                'basic-anatomy': [
+                    { question: 'The anatomic position describes:', options: ['Body erect, facing forward, arms at sides with palms facing forward', 'Body lying down on back', 'Body standing with arms crossed', 'Body sitting upright'], answer: 'Body erect, facing forward, arms at sides with palms facing forward', hint: 'From slide: "body erect, facing forward, holding arms at sides with palms of hands facing forward".' },
+                    { question: 'The midsagittal plane:', options: ['Divides the body into equal left and right halves', 'Divides the body into upper and lower portions', 'Divides the body into front and back portions', 'Divides the body diagonally'], answer: 'Divides the body into equal left and right halves', hint: 'From slide: "midsagittal divides the body into equal left and right halves".' },
+                    { question: 'The transverse plane:', options: ['Divides the body into superior and inferior portions', 'Divides the body into left and right halves', 'Divides the body into anterior and posterior portions', 'Runs vertically through the body'], answer: 'Divides the body into superior and inferior portions', hint: 'From slide: "transverse divides the body into superior (upper) and inferior (lower) portions".' },
+                    { question: 'The frontal plane:', options: ['Divides the body into anterior and posterior portions', 'Divides the body into superior and inferior portions', 'Divides the body into left and right halves', 'Runs horizontally through the body'], answer: 'Divides the body into anterior and posterior portions', hint: 'From slide: "frontal divides the body into anterior (front) and posterior (back) portions".' },
+                    { question: 'Which directional term means "toward the head"?', options: ['Cephalic', 'Caudal', 'Medial', 'Lateral'], answer: 'Cephalic', hint: 'From slide: "cephalic - toward the head".' },
+                    { question: 'Which directional term means "toward the lower part of the body"?', options: ['Caudal', 'Cephalic', 'Superior', 'Proximal'], answer: 'Caudal', hint: 'From slide: "caudal - toward the lower part of the body".' },
+                    { question: 'Which directional term means "toward the midline"?', options: ['Medial', 'Lateral', 'Proximal', 'Distal'], answer: 'Medial', hint: 'From slide: "medial - toward, or nearer, the midline".' },
+                    { question: 'Which directional term means "away from the midline"?', options: ['Lateral', 'Medial', 'Superior', 'Inferior'], answer: 'Lateral', hint: 'From slide: "lateral - toward, or nearer, the side of the body, away from the midline".' },
+                    { question: 'Which directional term means "nearest the midline or beginning of body structure"?', options: ['Proximal', 'Distal', 'Superior', 'Inferior'], answer: 'Proximal', hint: 'From slide: "proximal - situated nearest the midline or beginning of the body structure".' },
+                    { question: 'Which directional term means "farthest from the midline or beginning of body structure"?', options: ['Distal', 'Proximal', 'Medial', 'Lateral'], answer: 'Distal', hint: 'From slide: "distal - situated farthest from the midline or beginning of the body structure".' }
+                ],
+                'body-organization': [
+                    { question: 'What is the smallest structural and functional unit of an organism?', options: ['Cell', 'Tissue', 'Organ', 'System'], answer: 'Cell', hint: 'From slide: "Cell - basic structural and functional unit".' },
+                    { question: 'A group of similar cells working together is called a(n):', options: ['Tissue', 'Organ', 'Molecule', 'System'], answer: 'Tissue', hint: 'From slide: "Tissue - group of similar cells working together".' },
+                    { question: 'A structure made of different tissues is called a(n):', options: ['Organ', 'System', 'Tissue', 'Cell'], answer: 'Organ', hint: 'From slide: "Organ - structure made of different tissues".' },
+                    { question: 'A group of organs working together is called a(n):', options: ['System', 'Organ', 'Tissue', 'Cell'], answer: 'System', hint: 'From slide: "System - group of organs working together".' },
+                    { question: 'A complete living being is called a(n):', options: ['Organism', 'System', 'Organ', 'Tissue'], answer: 'Organism', hint: 'From slide: "Organism - complete living being".' },
+                    { question: 'What is the semipermeable membrane surrounding and protecting cell contents?', options: ['Cell membrane', 'Cytoplasm', 'Nucleus', 'Mitochondria'], answer: 'Cell membrane', hint: 'From slide: "Cell membrane - semipermeable membrane surrounding and protecting cell contents".' },
+                    { question: 'What is the material within the cell membrane, not part of the nucleus?', options: ['Cytoplasm', 'Cell membrane', 'Nucleus', 'DNA'], answer: 'Cytoplasm', hint: 'From slide: "Cytoplasm - material within the cell membrane, not part of the nucleus".' },
+                    { question: 'What controls the activities of the cell?', options: ['Nucleus', 'Cell membrane', 'Cytoplasm', 'Mitochondria'], answer: 'Nucleus', hint: 'From slide: "Nucleus - controls activities of the cell".' },
+                    { question: 'What is an unspecialized cell able to renew itself for long periods?', options: ['Stem cell', 'Adult cell', 'Embryonic cell', 'Differentiated cell'], answer: 'Stem cell', hint: 'From slide: "Stem cell - unspecialized cell able to renew itself for long periods".' },
+                    { question: 'What is an undifferentiated cell located among differentiated cells?', options: ['Adult stem cell', 'Embryonic stem cell', 'Regular cell', 'Specialized cell'], answer: 'Adult stem cell', hint: 'From slide: "Adult stem cell - undifferentiated cell located among differentiated cells".' }
+                ],
+                'body-regions': [
+                    { term: 'right hypochondriac region', meaning: 'covered by lower ribs' },
+                    { term: 'left hypochondriac region', meaning: 'covered by lower ribs' },
+                    { term: 'epigastric region', meaning: 'located above the stomach' },
+                    { term: 'right lumbar region', meaning: 'located near inward curve of the spine' },
+                    { term: 'left lumbar region', meaning: 'located near inward curve of the spine' },
+                    { term: 'umbilical region', meaning: 'surrounds the umbilicus' },
+                    { term: 'right iliac region', meaning: 'located over the hip bones' },
+                    { term: 'left iliac region', meaning: 'located over the hip bones' },
+                    { term: 'hypogastric region', meaning: 'located below the stomach' },
+                    { term: 'right upper quadrant (RUQ)', meaning: 'upper right section of abdomen' },
+                    { term: 'left upper quadrant (LUQ)', meaning: 'upper left section of abdomen' },
+                    { term: 'right lower quadrant (RLQ)', meaning: 'lower right section of abdomen' },
+                    { term: 'left lower quadrant (LLQ)', meaning: 'lower left section of abdomen' },
+                    { term: 'dorsal cavity', meaning: 'located along the back of the body and head' },
+                    { term: 'cranial cavity', meaning: 'located within the skull, surrounds and protects the brain' },
+                    { term: 'spinal cavity', meaning: 'located within the spinal column, surrounds and protects the spinal cord' },
+                    { term: 'ventral cavity', meaning: 'located along the front of the body' },
+                    { term: 'thoracic cavity', meaning: 'surrounds and protects heart and lungs' },
+                    { term: 'abdominal cavity', meaning: 'contains major organs of digestion' },
+                    { term: 'pelvic cavity', meaning: 'formed by hip bones, contains reproductive and excretory organs' }
+                ]
+            },
+            intermediate: {
+                'tissue-systems': [
+                    { term: 'epithelial tissue', meaning: 'protective covering for internal and external surfaces of body' },
+                    { term: 'epithelium', meaning: 'specialized for formation of epidermis of skin and surface layer of mucous membranes' },
+                    { term: 'endothelium', meaning: 'lines blood/lymph vessels, body cavities, glands, and organs' },
+                    { term: 'connective tissue', meaning: 'support and connect organs and other body tissues' },
+                    { term: 'dense connective tissue', meaning: 'forms joints' },
+                    { term: 'adipose tissue', meaning: 'provides padding, insulation, and support' },
+                    { term: 'muscular tissue', meaning: 'responsible for movement and contraction' },
+                    { term: 'nervous tissue', meaning: 'transmits electrical signals and coordinates body functions' },
+                    { term: 'parietal peritoneum', meaning: 'outer layer; lines the interior of abdominal wall' },
+                    { term: 'mesentery', meaning: 'double layer; attaches parts of intestine to interior abdominal wall' },
+                    { term: 'visceral peritoneum', meaning: 'inner layer; surrounds organs of abdominal cavity' }
+                ],
+                'disease-transmission': [
+                    { question: 'What is communicable disease transmission?', options: ['Transmitted from one person to another by direct or indirect contact', 'Disease that cannot spread', 'Genetic condition', 'Environmental exposure'], answer: 'Transmitted from one person to another by direct or indirect contact', hint: 'From slide: "transmitted from one person to another by direct or indirect contact".' },
+                    { question: 'Indirect contact transmission occurs when:', options: ['Susceptible person is infected by contact with contaminated surface', 'People touch each other directly', 'Disease spreads through air', 'Disease spreads through water'], answer: 'Susceptible person is infected by contact with contaminated surface', hint: 'From slide: "susceptible person is infected by contact with contaminated surface".' },
+                    { question: 'Bloodborne transmission spreads disease through:', options: ['Contact with infected blood/body fluids', 'Respiratory droplets', 'Contaminated food', 'Insect bites'], answer: 'Contact with infected blood/body fluids', hint: 'From slide: "spread of disease by contact with infected blood/body fluids".' },
+                    { question: 'Droplet transmission spreads disease by:', options: ['Large respiratory droplets produced by coughing or sneezing', 'Direct skin contact', 'Contaminated water', 'Blood transfusion'], answer: 'Large respiratory droplets produced by coughing or sneezing', hint: 'From slide: "spread of disease by large respiratory droplets produced by the act of coughing or sneezing".' },
+                    { question: 'Airborne transmission spreads disease by:', options: ['Contact with germs floating in the air', 'Direct physical contact', 'Contaminated surfaces', 'Blood exposure'], answer: 'Contact with germs floating in the air', hint: 'From slide: "spread of disease by contact with germs floating in the air".' },
+                    { question: 'Vector-borne transmission spreads disease through:', options: ['Bite of a vector like mosquito', 'Person-to-person contact', 'Contaminated food', 'Respiratory droplets'], answer: 'Bite of a vector like mosquito', hint: 'From slide: "spread of disease due to the bite of a vector; most common vector: mosquito".' },
+                    { question: 'Food-borne transmission spreads disease through:', options: ['Eating or drinking contaminated food or water', 'Breathing contaminated air', 'Direct skin contact', 'Insect bites'], answer: 'Eating or drinking contaminated food or water', hint: 'From slide: "spread of disease due to eating or drinking contaminated food or water".' },
+                    { question: 'An epidemic is:', options: ['Sudden, widespread outbreak of disease within a specific population group', 'Disease present in a community at all times', 'Disease affecting the entire world', 'Disease that cannot be prevented'], answer: 'Sudden, widespread outbreak of disease within a specific population group', hint: 'From slide: "sudden, widespread outbreak of disease within a specific population group".' },
+                    { question: 'An endemic disease is:', options: ['Ongoing presence of disease within a population group', 'Sudden outbreak of disease', 'Disease affecting multiple countries', 'Disease with no known cause'], answer: 'Ongoing presence of disease within a population group', hint: 'From slide: "ongoing presence of disease within a population group".' },
+                    { question: 'A pandemic is:', options: ['Outbreak of disease occurring over a large geographic area', 'Disease limited to one community', 'Disease affecting only children', 'Disease that lasts less than a week'], answer: 'Outbreak of disease occurring over a large geographic area', hint: 'From slide: "outbreak of disease occurring over a large geographic area".' }
+                ],
+                'healthcare-professionals': [
+                    { term: 'general practitioner', meaning: 'provides ongoing care for all ages' },
+                    { term: 'internist', meaning: 'specializes in diagnosing/treating disorders of internal organs' },
+                    { term: 'pediatrician', meaning: 'specializes in treating infants and children' },
+                    { term: 'geriatrician (gerontologist)', meaning: 'specialized in the care of older people' },
+                    { term: 'nurse practitioner', meaning: 'nurse with graduate training working under supervision of a physician' },
+                    { term: 'physician assistant', meaning: 'licensed professional working under the supervision of a physician' },
+                    { term: 'medical receptionist', meaning: 'schedules and registers patients for appointment' },
+                    { term: 'medical assistant', meaning: 'performs administrative/clinical tasks' },
+                    { term: 'medical coder', meaning: 'reviews medical records and assigns appropriate codes for treatment/services' },
+                    { term: 'emergency physician', meaning: 'specializes in high-acuity medicine in the emergency room' },
+                    { term: 'emergency medical technician', meaning: 'licensed health care professional working in pre hospital setting' },
+                    { term: 'registered nurse', meaning: 'licensed health care professional who assesses and provides care for patients' },
+                    { term: 'licensed vocational nurse', meaning: 'works under supervision of a doctor or RN' },
+                    { term: 'certified nursing assistant', meaning: 'provides basic patient care' },
+                    { term: 'pharmacist', meaning: 'licensed medical professional who dispenses prescribed medication' },
+                    { term: 'intensive care unit', meaning: 'site of continuous monitoring of critically ill patients' },
+                    { term: 'intensivist', meaning: 'specializes in care of critically ill patients' },
+                    { term: 'hospitalist', meaning: 'physician focusing on general medical care of hospitalized patients' },
+                    { term: 'telemetry unit', meaning: 'provides continuous cardiac monitoring by electronic transmission of data for patients with heart problems not requiring intensive care' },
+                    { term: 'medical/surgical unit', meaning: 'provides nursing care for lower acuity patients who require continued drug therapy or monitoring' }
+                ],
+                'terminology-building': [
+                    { question: 'Build a term meaning "study of cells":', options: ['cytology', 'cytologist', 'cytoplasm', 'cytosis'], answer: 'cytology', hint: 'Combine "cyt" (cell) + "ology" (study of).' },
+                    { question: 'Build a term meaning "specialist in study of cells":', options: ['cytologist', 'cytology', 'cytoplasm', 'cytosis'], answer: 'cytologist', hint: 'Combine "cyt" (cell) + "ologist" (specialist).' },
+                    { question: 'Build a term meaning "study of tissues":', options: ['histology', 'histologist', 'histogram', 'historic'], answer: 'histology', hint: 'Combine "hist" (tissue) + "ology" (study of).' },
+                    { question: 'Build a term meaning "located above the stomach":', options: ['epigastric', 'hypogastric', 'gastritis', 'gastroenterology'], answer: 'epigastric', hint: 'Combine "epi" (above) + "gastr" (stomach) + "ic" (pertaining to).' },
+                    { question: 'Build a term meaning "located below the stomach":', options: ['hypogastric', 'epigastric', 'gastritis', 'gastroenterology'], answer: 'hypogastric', hint: 'Combine "hypo" (below) + "gastr" (stomach) + "ic" (pertaining to).' },
+                    { question: 'Build a term meaning "pertaining to the front of the body":', options: ['ventral', 'dorsal', 'lateral', 'medial'], answer: 'ventral', hint: 'Combine "ventr" (belly/front) + "al" (pertaining to).' },
+                    { question: 'Build a term meaning "pertaining to the back of the body":', options: ['dorsal', 'ventral', 'lateral', 'medial'], answer: 'dorsal', hint: 'Combine "dors" (back) + "al" (pertaining to).' },
+                    { question: 'Build a term meaning "study of disease outbreaks in populations":', options: ['epidemiology', 'pathology', 'anatomy', 'physiology'], answer: 'epidemiology', hint: 'Combine "epi" (above) + "demi" (population) + "ology" (study of).' },
+                    { question: 'Build a term meaning "disease affecting entire populations":', options: ['pandemic', 'endemic', 'epidemic', 'pathogenic'], answer: 'pandemic', hint: 'Combine "pan" (entire) + "demi" (population) + "ic" (pertaining to).' },
+                    { question: 'Build a term meaning "constant control of body functions":', options: ['homeostasis', 'metabolism', 'pathogenesis', 'morphology'], answer: 'homeostasis', hint: 'Combine "home/o" (constant) + "stasis" (control).' }
+                ]
+            },
+            advanced: {
+                'clinical-cases': [
+                    { question: 'Case Study: A 45-year-old patient presents with chronic fatigue, weight loss, and frequent infections. Lab results show low white blood cell count and abnormal cell morphology. Based on your knowledge of cytology and cell biology, what is the most likely diagnosis?', options: ['Leukemia (abnormal white blood cell production)', 'Diabetes (insulin deficiency)', 'Hypertension (high blood pressure)', 'Arthritis (joint inflammation)'], answer: 'Leukemia (abnormal white blood cell production)', hint: 'Consider: low WBC count + abnormal cell morphology + cytology knowledge = blood cell disorder.' },
+                    { question: 'Case Study: A genetic counselor is working with a couple who both carry the recessive gene for cystic fibrosis. Using your genetics knowledge, what is the probability their child will have the disease?', options: ['25% (1 in 4 chance)', '50% (1 in 2 chance)', '75% (3 in 4 chance)', '100% (certain)'], answer: '25% (1 in 4 chance)', hint: 'Both parents are carriers (heterozygous). Use Punnett square: recessive gene requires inheritance from both parents.' },
+                    { question: 'Case Study: A patient with a family history of breast cancer undergoes genetic testing. The test reveals a mutation in the BRCA1 gene. Based on your understanding of genetics and cell biology, what does this mean?', options: ['Increased risk of developing breast/ovarian cancer', 'Guaranteed development of cancer', 'No increased cancer risk', 'Protection against all cancers'], answer: 'Increased risk of developing breast/ovarian cancer', hint: 'BRCA1 is a tumor suppressor gene. Mutations increase cancer risk but don\'t guarantee it.' },
+                    { question: 'Case Study: A 32-year-old woman is diagnosed with endometriosis. Her doctor explains this involves tissue growing outside the uterus. Using your knowledge of tissue types and body organization, what type of tissue is most likely involved?', options: ['Epithelial tissue (lining tissue)', 'Muscle tissue', 'Nerve tissue', 'Connective tissue'], answer: 'Epithelial tissue (lining tissue)', hint: 'Endometriosis involves uterine lining tissue (epithelium) growing in abnormal locations.' },
+                    { question: 'Case Study: A patient with diabetes has poor wound healing in their feet. The doctor explains this is due to poor blood circulation. Using your knowledge of body organization and systems, which system is most affected?', options: ['Cardiovascular system (blood vessels)', 'Nervous system', 'Digestive system', 'Respiratory system'], answer: 'Cardiovascular system (blood vessels)', hint: 'Poor wound healing + diabetes = circulatory problems affecting blood flow to extremities.' }
+                ],
+                'genetics-disorders': [
+                    { question: 'Problem Solving: A couple has three children. The first two have normal vision, but the third is colorblind. The father has normal vision, and the mother is a carrier. What is the probability their next child will be colorblind?', options: ['25% (1 in 4 chance)', '50% (1 in 2 chance)', '75% (3 in 4 chance)', '100% (certain)'], answer: '25% (1 in 4 chance)', hint: 'Colorblindness is X-linked recessive. Mother is carrier (X^c X), father is normal (X Y). Use Punnett square.' },
+                    { question: 'Problem Solving: A patient has 47 chromosomes instead of 46. This condition is called trisomy. Based on your genetics knowledge, what could cause this abnormality?', options: ['Nondisjunction during meiosis', 'Normal cell division', 'Genetic mutation in DNA sequence', 'Environmental factors only'], answer: 'Nondisjunction during meiosis', hint: 'Trisomy = 3 copies of a chromosome. This happens when chromosomes fail to separate during meiosis (nondisjunction).' },
+                    { question: 'Problem Solving: A family has a history of Huntington\'s disease, which is autosomal dominant. If one parent has the disease and the other doesn\'t, what is the probability their child will inherit it?', options: ['50% (1 in 2 chance)', '25% (1 in 4 chance)', '75% (3 in 4 chance)', '100% (certain)'], answer: '50% (1 in 2 chance)', hint: 'Autosomal dominant means one copy of the gene causes the disease. Affected parent is heterozygous (Aa), unaffected parent is (aa).' },
+                    { question: 'Problem Solving: A patient has sickle cell anemia, which is caused by a single nucleotide change in the hemoglobin gene. Using your genetics knowledge, what type of mutation is this?', options: ['Point mutation (single base change)', 'Chromosomal deletion', 'Gene duplication', 'Chromosomal inversion'], answer: 'Point mutation (single base change)', hint: 'Single nucleotide change = point mutation. This changes one amino acid in the protein, causing the sickle cell shape.' },
+                    { question: 'Problem Solving: A genetic test shows a patient has a balanced translocation between chromosomes 9 and 22. This is associated with chronic myeloid leukemia. Based on your genetics knowledge, what does this mean?', options: ['Genetic material exchanged between chromosomes', 'Genetic material lost from both chromosomes', 'Extra genetic material added', 'No genetic material changed'], answer: 'Genetic material exchanged between chromosomes', hint: 'Translocation = pieces of chromosomes break off and attach to different chromosomes. Balanced means no genetic material is lost.' }
+                ],
+                'pathology-analysis': [
+                    { question: 'Diagnostic Challenge: A patient presents with symptoms including fever, cough, and difficulty breathing. Chest X-ray shows fluid in the lungs. Based on your knowledge of body cavities and systems, which cavity is most affected?', options: ['Thoracic cavity (contains lungs)', 'Abdominal cavity', 'Cranial cavity', 'Pelvic cavity'], answer: 'Thoracic cavity (contains lungs)', hint: 'Symptoms + chest X-ray findings = respiratory problem. Lungs are located in the thoracic cavity.' },
+                    { question: 'Diagnostic Challenge: A patient has severe abdominal pain in the right lower quadrant. Using your knowledge of body regions and anatomy, which organ is most likely involved?', options: ['Appendix (located in RLQ)', 'Liver (located in RUQ)', 'Stomach (located in LUQ)', 'Bladder (located in pelvic region)'], answer: 'Appendix (located in RLQ)', hint: 'Right lower quadrant pain is classic for appendicitis. Use your knowledge of abdominal quadrants and organ locations.' },
+                    { question: 'Diagnostic Challenge: A patient has a tumor in the hypochondriac region. Based on your knowledge of body regions and anatomy, which organs are most likely affected?', options: ['Liver and gallbladder (covered by lower ribs)', 'Stomach and pancreas', 'Intestines', 'Kidneys'], answer: 'Liver and gallbladder (covered by lower ribs)', hint: 'Hypochondriac region = covered by lower ribs. Think about what major organs are located there.' },
+                    { question: 'Diagnostic Challenge: A patient has numbness and tingling in their lower extremities. The doctor suspects a spinal cord problem. Using your knowledge of body cavities and organization, which cavity contains the spinal cord?', options: ['Spinal cavity (within spinal column)', 'Cranial cavity', 'Thoracic cavity', 'Abdominal cavity'], answer: 'Spinal cavity (within spinal column)', hint: 'Spinal cord problems = spinal cavity. The spinal cord runs through the spinal column, protected by the spinal cavity.' },
+                    { question: 'Diagnostic Challenge: A patient has a mass in the epigastric region. Based on your knowledge of body regions and anatomy, which organ is most likely involved?', options: ['Stomach (located above stomach region)', 'Liver', 'Kidneys', 'Bladder'], answer: 'Stomach (located above stomach region)', hint: 'Epigastric = above the stomach. The stomach itself is located in this region, along with parts of other digestive organs.' }
+                ],
+                'medical-research': [
+                    { question: 'Research Analysis: A study is investigating the effectiveness of stem cell therapy for heart disease. Using your knowledge of cell biology and stem cells, what makes stem cells promising for this research?', options: ['Ability to differentiate into cardiac muscle cells', 'They are already specialized heart cells', 'They can only become blood cells', 'They cannot divide or grow'], answer: 'Ability to differentiate into cardiac muscle cells', hint: 'Stem cells are unspecialized and can become different cell types. For heart disease, they could become cardiac muscle cells.' },
+                    { question: 'Research Analysis: A clinical trial is testing a new drug for genetic disorders. The drug targets specific DNA sequences. Based on your genetics knowledge, what is this approach called?', options: ['Gene therapy (targeting specific genes)', 'Chemotherapy (killing all cells)', 'Radiation therapy (damaging DNA)', 'Surgery (removing tissue)'], answer: 'Gene therapy (targeting specific genes)', hint: 'Targeting specific DNA sequences to treat genetic disorders = gene therapy. This is a precision medicine approach.' },
+                    { question: 'Research Analysis: A study is examining tissue samples from patients with different diseases. Using your knowledge of histology and tissue types, what would researchers be looking for?', options: ['Abnormal tissue structure and cell organization', 'Normal healthy tissue patterns', 'Only blood cell counts', 'Only genetic mutations'], answer: 'Abnormal tissue structure and cell organization', hint: 'Histology = study of tissues. Researchers would examine tissue structure, cell organization, and look for abnormalities.' },
+                    { question: 'Research Analysis: A research team is studying how cells respond to stress. They observe changes in cell membrane permeability and organelle function. Based on your cell biology knowledge, what process are they studying?', options: ['Cellular stress response and adaptation', 'Normal cell division', 'Cell death only', 'Protein synthesis only'], answer: 'Cellular stress response and adaptation', hint: 'Changes in membrane permeability and organelle function = cellular stress response. Cells adapt to maintain homeostasis.' },
+                    { question: 'Research Analysis: A study is investigating the role of genetics in disease transmission. They find that certain genetic markers increase susceptibility to infections. Based on your genetics knowledge, what does this suggest?', options: ['Genetic factors influence disease susceptibility', 'Genetics have no role in disease', 'Only environmental factors matter', 'Diseases are not preventable'], answer: 'Genetic factors influence disease susceptibility', hint: 'Genetic markers affecting disease susceptibility = genetics plays a role in how people respond to infections and diseases.' }
+                ]
+            }
+        };
+
+        // --- GAME CONSTANTS ---
+        const MATCHING_GAME_MODES = [
+            'word-breakdown', 'body-regions', 'tissue-systems', 
+            'healthcare-professionals'
+        ];
+
+        // --- UTILITY FUNCTIONS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // --- TIMER FUNCTIONS ---
+        function startTimer() {
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                gameState.elapsedTime++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.elapsedTime / 60);
+            const seconds = gameState.elapsedTime % 60;
+            document.getElementById('timer').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = null;
+        }
+        
+        // --- ACCESSIBILITY ---
+        function readAloud(text) {
+             if ('speechSynthesis' in window && text) {
+                speechSynthesis.cancel(); // Stop any previous speech
+                const cleanText = text.replace(/-/g, ' ');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // --- PAUSE/RESUME LOGIC ---
+        function pauseGame() {
+            stopTimer();
+            document.getElementById('pauseOverlay').style.display = 'flex';
+        }
+
+        function resumeGame() {
+            startTimer();
+            document.getElementById('pauseOverlay').style.display = 'none';
+        }
+
+
+        // --- UI UPDATE FUNCTIONS ---
+        function updateStats() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('streak').textContent = gameState.streak;
+        }
+
+        function updateProgress() {
+            let progress;
+            let displayText;
+            
+            if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                // For matching games, show progress based on current question set and items matched
+                const currentItemsPerQuestion = 10;
+                const startIndex = gameState.currentQuestionIndex * currentItemsPerQuestion;
+                const endIndex = Math.min(startIndex + currentItemsPerQuestion, gameState.totalItemsForAccuracy);
+                const currentQuestionItems = endIndex - startIndex;
+                const matchedItems = document.querySelectorAll('.drop-zone.filled').length;
+                
+                // Calculate overall progress across all question sets
+                const totalProgress = ((gameState.currentQuestionIndex * currentItemsPerQuestion) + matchedItems) / gameState.totalItemsForAccuracy;
+                progress = totalProgress * 100;
+                displayText = `${(gameState.currentQuestionIndex * currentItemsPerQuestion) + matchedItems}/${gameState.totalItemsForAccuracy}`;
+                
+                // Update matching progress display
+                const matchingProgress = document.getElementById('matching-progress');
+                if (matchingProgress) {
+                    matchingProgress.textContent = `Question ${gameState.currentQuestionIndex + 1}/${gameState.totalQuestions}: ${matchedItems} of ${currentQuestionItems} items matched`;
+                }
+            } else {
+                // For other games, show progress based on questions answered
+                progress = (gameState.questionsAnswered / gameState.totalQuestions) * 100;
+                displayText = `${gameState.questionsAnswered}/${gameState.totalQuestions}`;
+            }
+            
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = displayText;
+        }
+        
+        function checkMatchingSubmitButton() {
+            if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                const matchedItems = document.querySelectorAll('.drop-zone.filled').length;
+                const submitBtn = document.getElementById('submitBtn');
+                
+                // Calculate how many items should be in the current question set
+                const currentItemsPerQuestion = 10;
+                const startIndex = gameState.currentQuestionIndex * currentItemsPerQuestion;
+                const endIndex = Math.min(startIndex + currentItemsPerQuestion, gameState.totalItemsForAccuracy);
+                const currentQuestionItems = endIndex - startIndex;
+                
+                if (matchedItems === currentQuestionItems) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit';
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = `Match All Items First (${matchedItems}/${currentQuestionItems})`;
+                }
+            }
+        }
+        
+        // --- GAME FLOW FUNCTIONS ---
+        function startGame(level, mode) {
+            gameState.currentLevel = level;
+            gameState.currentMode = mode;
+            gameState.score = 0;
+            gameState.streak = 0;
+            gameState.bestStreak = 0;
+            gameState.questionsAnswered = 0;
+            gameState.correctAnswers = 0;
+            gameState.isAnswered = false;
+            gameState.elapsedTime = 0;
+            gameState.incorrectlyAnswered = [];
+            gameState.currentQuestionIndex = 0;
+
+            const items = medicalData[level][mode];
+            
+            if (MATCHING_GAME_MODES.includes(mode)) {
+                // For matching games, show 10 items per question, calculate total questions needed
+                const itemsPerQuestion = 10;
+                gameState.totalQuestions = Math.ceil(items.length / itemsPerQuestion);
+                gameState.totalItemsForAccuracy = items.length;
+                gameState.shuffledMatchingItems = shuffleArray([...items]);
+                gameState.currentQuestionIndex = 0;
+            } else {
+                gameState.totalQuestions = items.length;
+                gameState.totalItemsForAccuracy = items.length;
+            }
+
+            document.getElementById('level').textContent = level.charAt(0).toUpperCase() + level.slice(1);
+            updateStats();
+            updateProgress();
+            updateTimerDisplay();
+            
+            showScreen('gameScreen');
+            startTimer();
+            loadQuestion();
+        }
+
+        function showMenu() {
+            stopTimer();
+            showScreen('menuScreen');
+        }
+        
+        function nextQuestion() {
+            if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                // For matching games, check if we've completed all question sets
+                if (gameState.currentQuestionIndex >= gameState.totalQuestions - 1) {
+                    endGame();
+                } else {
+                    gameState.currentQuestionIndex++;
+                    loadQuestion();
+                }
+            } else if (gameState.questionsAnswered >= gameState.totalQuestions) {
+                endGame();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function loadQuestion() {
+            gameState.isAnswered = false;
+            document.getElementById('hintBox').classList.remove('show');
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('hintBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = 'Submit';
+            
+            // For matching games, disable submit until all items are matched
+            if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitBtn').textContent = 'Match All Items First';
+            }
+
+
+            const submitBtn = document.getElementById('submitBtn');
+            const hintBtn = document.getElementById('hintBtn');
+
+            switch (gameState.currentMode) {
+                case 'basic-anatomy':
+                case 'body-organization':
+                case 'disease-transmission':
+                case 'terminology-building':
+                case 'clinical-cases':
+                case 'genetics-disorders':
+                case 'pathology-analysis':
+                case 'medical-research':
+                    loadMultipleChoice();
+                    submitBtn.style.display = 'inline-block';
+                    hintBtn.style.display = 'inline-block';
+                    break;
+
+                case 'word-breakdown':
+                case 'body-regions':
+                case 'tissue-systems':
+                case 'healthcare-professionals':
+                    loadMatching();
+                    submitBtn.style.display = 'inline-block';
+                    hintBtn.style.display = 'none';
+                    break;
+            }
+        }
+        
+                 function endGame(wasForced = false) {
+             stopTimer();
+             
+             // For matching games, count actual matched items
+             let itemsAttempted;
+             if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                 // For matching games with pagination, we need to count all items across all completed question sets
+                 const currentItemsPerQuestion = 10;
+                 const completedQuestions = gameState.currentQuestionIndex;
+                 const itemsFromCompletedQuestions = completedQuestions * currentItemsPerQuestion;
+                 const currentQuestionMatchedItems = document.querySelectorAll('.drop-zone.filled').length;
+                 const totalMatchedItems = itemsFromCompletedQuestions + currentQuestionMatchedItems;
+                 itemsAttempted = wasForced ? totalMatchedItems : gameState.totalItemsForAccuracy;
+             } else {
+                 itemsAttempted = wasForced ? gameState.questionsAnswered : gameState.totalItemsForAccuracy;
+             }
+
+            const totalItems = itemsAttempted;
+
+            const accuracy = totalItems > 0 ? Math.round((gameState.correctAnswers / totalItems) * 100) : 0;
+            
+            document.getElementById('finalScore').textContent = `${gameState.score}`;
+            document.getElementById('totalTime').textContent = document.getElementById('timer').textContent;
+            document.getElementById('totalAnswered').textContent = `${wasForced ? itemsAttempted : gameState.totalItemsForAccuracy}`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            document.getElementById('bestStreak').textContent = gameState.bestStreak;
+
+            // Show performance feedback chip
+            const resultsFeedback = document.getElementById('resultsFeedback');
+            if (resultsFeedback) {
+                resultsFeedback.style.display = 'inline-block';
+                resultsFeedback.classList.remove('chip-excellent', 'chip-good', 'chip-practice', 'chip-neutral');
+                
+                if (accuracy >= 90) {
+                    resultsFeedback.textContent = 'Excellent Performance! 🎉';
+                    resultsFeedback.classList.add('chip-excellent');
+                } else if (accuracy >= 70) {
+                    resultsFeedback.textContent = 'Good Progress! 👍';
+                    resultsFeedback.classList.add('chip-good');
+                } else if (accuracy > 0) {
+                    resultsFeedback.textContent = 'Keep Practicing! 💪';
+                    resultsFeedback.classList.add('chip-practice');
+                } else {
+                    resultsFeedback.textContent = 'Session Started';
+                    resultsFeedback.classList.add('chip-neutral');
+                }
+            }
+
+            // Populate review section
+            const reviewList = document.getElementById('reviewList');
+            const reviewSection = document.getElementById('reviewSection');
+            reviewList.innerHTML = '';
+            if (gameState.incorrectlyAnswered.length > 0) {
+                reviewSection.style.display = 'block';
+                gameState.incorrectlyAnswered.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'review-item';
+                    li.innerHTML = `<strong>Question:</strong> ${item.question} <br> <span><strong>Correct Answer:</strong> ${item.answer}</span>`;
+                    reviewList.appendChild(li);
+                });
+            } else {
+                reviewSection.style.display = 'none';
+            }
+
+            showScreen('resultsScreen');
+        }
+
+        // --- QUESTION TYPE IMPLEMENTATIONS ---
+
+        function loadMultipleChoice() {
+            const gameArea = document.getElementById('gameArea');
+            const allItems = medicalData[gameState.currentLevel][gameState.currentMode];
+            const questionData = { ...allItems[gameState.questionsAnswered] };
+            
+            gameState.currentQuestion = { question: questionData.question, answer: questionData.answer, hint: questionData.hint };
+            
+            const options = shuffleArray([...questionData.options]);
+            
+            gameArea.innerHTML = `
+                <div class="question-header">
+                    <div class="question" id="questionText">${questionData.question}</div>
+                     <button class="btn-icon" onclick="readAloud(document.getElementById('questionText').textContent)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                    </button>
+                </div>
+                <div class="options">
+                    ${options.map((opt, i) => `
+                        <div class="option" onclick="selectOption(this)" data-value="${opt}">
+                            ${String.fromCharCode(65 + i)}. ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function loadMatching() {
+            const gameArea = document.getElementById('gameArea');
+            // Show only 10 items per question for matching games
+            const itemsPerQuestion = 10;
+            const startIndex = gameState.currentQuestionIndex * itemsPerQuestion;
+            const endIndex = Math.min(startIndex + itemsPerQuestion, gameState.shuffledMatchingItems.length);
+            const currentItems = gameState.shuffledMatchingItems.slice(startIndex, endIndex);
+            
+            const terms = currentItems.map(item => ({ term: item.term, meaning: item.meaning }));
+            const definitions = shuffleArray(currentItems.map(item => ({ term: item.term, meaning: item.meaning })));
+
+            gameState.currentQuestion = { answer: terms.map(t => `${t.term}-${t.meaning}`) };
+
+            gameArea.innerHTML = `
+                 <div class="question-header">
+                    <div class="question" id="questionText">Match the terms with their correct meanings. (Question ${gameState.currentQuestionIndex + 1} of ${gameState.totalQuestions})</div>
+                     <button class="btn-icon" onclick="readAloud('Match the terms with their correct meanings.')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                    </button>
+                </div>
+                                 <div style="text-align: center; margin-bottom: 15px; color: #666; font-style: italic;">
+                     <strong>Tip:</strong> Drag terms to meanings. Click on placed terms to return them. You can swap items between drop zones.
+                     <br><span id="matching-progress" style="color: #CC0033; font-weight: bold; margin-top: 5px; display: block;">Question ${gameState.currentQuestionIndex + 1}/${gameState.totalQuestions}: 0 of ${endIndex - startIndex} items matched</span>
+                 </div>
+                <div class="drag-container">
+                    <div class="drag-column">
+                        <h4>Terms</h4>
+                        <div id="drag-source">
+                            ${terms.map(t => `
+                                <div class="draggable" draggable="true" data-term="${t.term}">
+                                    <span>${t.term}</span>
+                                    <button class="btn-icon-small" onclick="readAloud('${t.term}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                                    </button>
+                                </div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="drag-column">
+                        <h4>Meanings</h4>
+                        <div id="drop-target">
+                            ${definitions.map(d => `
+                                <div class="drop-zone" data-meaning="${d.meaning}">
+                                    <span style="flex-grow: 1; text-align: right; margin-right: 10px;">${d.meaning}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            addDragDropListeners();
+        }
+        
+
+
+        // --- INTERACTIVITY AND ANSWER CHECKING ---
+
+        function selectOption(element) {
+            if (gameState.isAnswered) return;
+            document.querySelectorAll('.option.selected').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function showHint() {
+            const hintBox = document.getElementById('hintBox');
+            if (gameState.currentQuestion && gameState.currentQuestion.hint) {
+                hintBox.textContent = gameState.currentQuestion.hint;
+                hintBox.classList.add('show');
+                gameState.score -= 5; // Penalty for using a hint
+                if (gameState.score < 0) gameState.score = 0;
+                updateStats();
+                document.getElementById('hintBtn').disabled = true;
+            }
+        }
+
+        function checkAnswer() {
+            if (gameState.isAnswered) {
+                nextQuestion();
+                return;
+            }
+            
+            let isCorrect = false;
+            let userAnswer;
+            const feedback = document.getElementById('feedback');
+
+            // For matching games, check if all items are placed
+            if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                const matchedItems = document.querySelectorAll('.drop-zone.filled').length;
+                const currentItemsPerQuestion = 10;
+                const startIndex = gameState.currentQuestionIndex * currentItemsPerQuestion;
+                const endIndex = Math.min(startIndex + currentItemsPerQuestion, gameState.totalItemsForAccuracy);
+                const currentQuestionItems = endIndex - startIndex;
+                
+                if (matchedItems < currentQuestionItems) {
+                    feedback.innerHTML = `<strong>Please match all ${currentQuestionItems} items in this question set before proceeding.</strong>`;
+                    feedback.className = 'feedback show warning';
+                    return;
+                }
+            }
+
+            if (['basic-anatomy', 'body-organization', 'disease-transmission', 'terminology-building', 'clinical-cases', 'genetics-disorders', 'pathology-analysis', 'medical-research'].includes(gameState.currentMode)) {
+                const selected = document.querySelector('.option.selected');
+                if (!selected) {
+                    feedback.innerHTML = `<strong>Please select an answer before proceeding.</strong>`;
+                    feedback.className = 'feedback show warning';
+                    return;
+                }
+                userAnswer = selected.dataset.value;
+                isCorrect = userAnswer === gameState.currentQuestion.answer;
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.value === gameState.currentQuestion.answer) {
+                        opt.classList.add('correct');
+                    } else if (opt.classList.contains('selected')) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if(isCorrect) {
+                    gameState.correctAnswers++;
+                } else {
+                    gameState.incorrectlyAnswered.push(gameState.currentQuestion);
+                }
+
+            } else if (['word-breakdown', 'body-regions', 'tissue-systems', 'healthcare-professionals'].includes(gameState.currentMode)) {
+                let correctMatches = 0;
+                let feedbackHtml = '<ul class="feedback-list">';
+                const dropZones = document.querySelectorAll('.drop-zone');
+                
+                dropZones.forEach(zone => {
+                    const dropped = zone.querySelector('.draggable');
+                    const meaning = zone.dataset.meaning;
+                    if (dropped) {
+                        const term = dropped.dataset.term;
+                        const isMatchCorrect = gameState.currentQuestion.answer.includes(`${term}-${meaning}`);
+                        if (isMatchCorrect) {
+                            correctMatches++;
+                        } else {
+                            const correctAnswer = gameState.currentQuestion.answer.find(a => a.startsWith(term));
+                            if (correctAnswer) {
+                                gameState.incorrectlyAnswered.push({ question: `Matching for "${term}"`, answer: correctAnswer.split('-')[1] });
+                            }
+                        }
+                        feedbackHtml += `<li class="feedback-item ${isMatchCorrect ? 'correct-match' : 'incorrect-match'}">You matched <strong>${term}</strong> with <strong>${meaning}</strong>.</li>`;
+                    } else {
+                         const correctAnswer = gameState.currentQuestion.answer.find(a => a.endsWith(meaning));
+                         if (correctAnswer) {
+                             const correctTerm = correctAnswer.split('-')[0];
+                             gameState.incorrectlyAnswered.push({ question: `Matching for "${correctTerm}"`, answer: meaning });
+                         }
+                         feedbackHtml += `<li class="feedback-item incorrect-match">You did not match <strong>${meaning}</strong>.</li>`;
+                    }
+                });
+                feedbackHtml += '</ul>';
+                feedback.innerHTML = feedbackHtml;
+                
+                gameState.correctAnswers += correctMatches;
+                isCorrect = correctMatches === gameState.currentQuestion.answer.length;
+            }
+            
+            // Update game state and UI
+            gameState.isAnswered = true;
+            gameState.questionsAnswered++;
+            updateProgress();
+            
+            if (isCorrect) {
+                gameState.score += 10;
+                gameState.streak++;
+                if (!['word-breakdown', 'body-regions', 'tissue-systems', 'healthcare-professionals'].includes(gameState.currentMode)) {
+                    feedback.innerHTML = `<strong>Correct!</strong> The answer is ${gameState.currentQuestion.answer}.`;
+                }
+                feedback.className = 'feedback show success';
+            } else {
+                gameState.streak = 0;
+                 if (!['word-breakdown', 'body-regions', 'tissue-systems', 'healthcare-professionals'].includes(gameState.currentMode)) {
+                    feedback.innerHTML = `<strong>Incorrect.</strong> The correct answer is: ${gameState.currentQuestion.answer}`;
+                }
+                feedback.className = 'feedback show error';
+            }
+            
+            if (gameState.streak > gameState.bestStreak) {
+                gameState.bestStreak = gameState.streak;
+            }
+            
+            updateStats();
+            
+                         if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                 if (gameState.currentQuestionIndex >= gameState.totalQuestions - 1) {
+                     document.getElementById('submitBtn').textContent = 'Finish Game';
+                 } else {
+                     document.getElementById('submitBtn').textContent = 'Next Question →';
+                 }
+             } else {
+                 document.getElementById('submitBtn').textContent = 'Next Question →';
+                 if (gameState.questionsAnswered >= gameState.totalQuestions) {
+                     document.getElementById('submitBtn').textContent = 'Finish Game';
+                 }
+             }
+        }
+        
+        // --- DRAG AND DROP LOGIC ---
+        function addDragDropListeners() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const dragging = document.querySelector('.dragging');
+                    if (dragging) {
+                        // If the drop zone already has an item, swap them
+                        const existingItem = zone.querySelector('.draggable');
+                        if (existingItem) {
+                            // Move existing item back to its original position in the source
+                            const sourceContainer = document.getElementById('drag-source');
+                            sourceContainer.appendChild(existingItem);
+                        }
+                                                 // Place the new item
+                         zone.appendChild(dragging);
+                         zone.classList.add('filled');
+                         
+                         // Update progress for matching games
+                         if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                             updateProgress();
+                             checkMatchingSubmitButton();
+                         }
+                     }
+                 });
+             });
+
+                         // Add click functionality to return items to source
+             dropZones.forEach(zone => {
+                 zone.addEventListener('click', (e) => {
+                     if (e.target.closest('.draggable')) {
+                         const item = zone.querySelector('.draggable');
+                         if (item) {
+                             const sourceContainer = document.getElementById('drag-source');
+                             sourceContainer.appendChild(item);
+                             zone.classList.remove('filled');
+                             
+                             // Update progress for matching games
+                             if (MATCHING_GAME_MODES.includes(gameState.currentMode)) {
+                                 updateProgress();
+                                 checkMatchingSubmitButton();
+                             }
+                         }
+                     }
+                 });
+             });
+        }
+        
+                 // --- INITIALIZE MENU ---
+         document.addEventListener('DOMContentLoaded', () => {
+             document.body.classList.remove('preload');
+             document.body.classList.add('ready');
+             
+             const beginnerTotal = medicalData.beginner['word-breakdown'].length + 
+                                 medicalData.beginner['basic-anatomy'].length +
+                                 medicalData.beginner['body-organization'].length +
+                                 medicalData.beginner['body-regions'].length;
+             
+             const intermediateTotal = medicalData.intermediate['tissue-systems'].length + 
+                                     medicalData.intermediate['disease-transmission'].length +
+                                     medicalData.intermediate['healthcare-professionals'].length +
+                                     medicalData.intermediate['terminology-building'].length;
+             
+             const advancedTotal = medicalData.advanced['clinical-cases'].length + 
+                                 medicalData.advanced['genetics-disorders'].length +
+                                 medicalData.advanced['pathology-analysis'].length +
+                                 medicalData.advanced['medical-research'].length;
+
+             document.getElementById('beginner-title').textContent = `Beginner (${beginnerTotal} Questions Total)`;
+             document.getElementById('intermediate-title').textContent = `Intermediate (${intermediateTotal} Questions Total)`;
+             document.getElementById('advanced-title').textContent = `Advanced (${advancedTotal} Questions Total)`;
+             
+             // Initialize progress display
+             updateProgress();
+         });
+    </script>
+</body>
+</html>
+
